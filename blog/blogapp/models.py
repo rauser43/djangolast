@@ -22,3 +22,5 @@ class Post(models.Model):
 
 category=models.ForeignKey(Category, on_delete=models.CASCADE)
 tags=models.ManyToManyField(Tag)
+image=models.ImageField(upload_to='posts', null=True, blank=True)
+
