@@ -1,7 +1,10 @@
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import render, get_object_or_404, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView,DeleteView
 from django.views.generic.base import ContextMixin
+
 from .models import Post, Tag
 from .form import ContactForm, PostForm
 from django.core.mail import send_mail
@@ -33,11 +36,14 @@ def contact_view (request):
         form = ContactForm()
         return render(request, "blogapp/contact.html", context={'form':form})
 
+@user_passes_test(lambda u: u.is_superuser)
 def post(request,id):
     post=get_object_or_404(Post, id=id)
     post=Post.objects.get(id=id)
     return render(request, "blogapp/post.html", context={'post': post})
 
+
+@login_required
 def create_post(request):
     if request.method == "GET":
         form = PostForm()
@@ -45,6 +51,7 @@ def create_post(request):
     else:
         form=PostForm(request.POST, files=request.FILES)
         if form.is_valid():
+            form.instance.user = request.user
             form.save()
             return HttpResponseRedirect(reverse('blog:index'))
         else:
@@ -69,9 +76,13 @@ def create_post(request):
 
                 return Tag.objects.all()
 
-        class TagDetailView (DetailView, NameContextMixin):
+        class TagDetailView (UserPassesTestMixin,DetailView, NameContextMixin):
             model = Tag
             template_name = "blogapp/tag_detail.html"
+
+            def test_func(self):
+                return self.request.user.is_supruser
+            
 
         def get(self, request, *args, **kwargs):
             self.tag_id=kwargs['pk']
@@ -86,7 +97,7 @@ def create_post(request):
         def get_object(self, queryset=None):
             return get_object_or_404(Tag,pk=self.tag_id)
 
-        class TagCreateView(CreateView, NameContextMixin):
+        class TagCreateView(LoginRequiredMixin, CreateView, NameContextMixin):
 # form_class=
         fields = '__all__'
         model=Tag
@@ -98,6 +109,7 @@ def create_post(request):
 
 
         def form_valid(self, form):
+            form.instance.user = self.request.user
             return super().form_valid(form)
 
 

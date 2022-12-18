@@ -30,10 +30,18 @@
                     <ul class="navbar-nav ms-auto py-4 py-lg-0">
                         <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href={% url 'blog:index' %}>Главная</a></li>
                         <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href={% url 'blog:contact' %}>Контакты</a></li>
-                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href={% url 'blog:create' %}>Создать пост</a></li>   <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href={% url 'blog:post' %}>Sample Post</a></li>-->
-                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href={% url 'blog:tag_list' %}>Список тегов</a></li>   <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href={% url 'blog:post' %}>Sample Post</a></li>-->
+                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href={% url 'blog:create' %}>Создать пост</a></li>
+                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href={% url 'blog:post' %}>Sample Post</a></li>-->
+                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href={% url 'blog:tag_list' %}>Список тегов</a></li>
+                        {% if user.is_authenticated %}
 
-                    </ul>
+
+                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href={% url 'users:login' %}>Вход</a></li>
+                        Привет, {{user.username}}
+                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href={% url 'users:logout' %}> Выход</a></li>
+                        {% else %}
+                         <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href={% url 'users:register' %}>Регистрация</a></li>
+                    </u{% endif %}
                 </div>
             </div>
         </nav>
