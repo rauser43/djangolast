@@ -7,9 +7,10 @@ For more information on this file, see
 https://docs.djangoproject.com/en/4.1/topics/settings/
 
 For the full list of settings and their values, see
-https://docs.djangoproject.com/en/4.1/ref/settings/
-"""
 
+
+"""
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -31,23 +32,21 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-     'django.contrib.admin',
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles'
-    'django.contrib.staticfilesblogapp'
-    'django.contrib.staticfilesdjango'
-    'blogapp.management.commands',
-    'blogapp'
+    'django.contrib.staticfiles',
+    'blogapp',
+    'usersapp'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -119,9 +118,24 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+
+STATICFIELDS_DIRS=[os.path.join(BASE_DIR,'static')]
+
+MEDIA_URL='/media/'
+
+MEDIA_ROOT =[os.path.join(BASE_DIR, 'media')]
 
 # Default primary key field type
-# https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
+# https://docs.djangoproject.com/en/4.1/ref/settings/#de python manage.py makemigrationsfault-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+EMAIL_BACKEND='django.core.mail.backends.console.EmailBackend'
+EMAIL_FILE_PATH= '/tmp/emails'
+
+AUTH_USER_MODEL = 'usersapp.BlogUser'
+
+LOGIN_REDIRECT_URL='/'
+LOGOUT_REDIRECT_URL="/"
+LOGIN_URL="/users/login/"

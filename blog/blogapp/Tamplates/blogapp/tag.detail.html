@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% block title %}
+    {{post.name}}
+{% end block %}
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          {{<object.name}}
+        </div>
+
+         <a href="{%url "blog:tag_update" pk=item.pk %}">Изменить</a>
+
+    </div>
+{% endblock %}

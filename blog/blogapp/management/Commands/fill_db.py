@@ -11,31 +11,12 @@ class Command(BaseCommand):
             print(item)
             print(type(item))
 
-    #     print('end')
-    #
-    # category= Category.objects.get(name="Category")
-    # print(category)
-    # print(type(category))
-    # #
-    # category = Category.objects.filter(name="Category")
-    # print(category)
-    # print(type(category))
-    #
-    # posts=Post.objects.first()
-    # print(post)
-    #
-    #  print(post.category)
-    #  print(type(post.category))
-    #  print(post.category.name)
-    #
-    # print(post.tags.all)
-    # print(post.tags.first())
-    # print(post.tags.first().name)
-    # print(type(post.tags.first()))
-    #
-    # Category.objects.create(name="Новая")
-    # Category.name="Измененная"
-    # category.save()
-    #
-    # category.delete()
-    # category.objects.all
+Command.object.create(name= "новая", description= "Что-то"
+        category=Category.objects.get(name="новая")
+        category.name="Измененная"
+        category.save()
+
+        category delete()
+print (category.has_image())
+
+
