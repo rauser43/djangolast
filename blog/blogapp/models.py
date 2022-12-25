@@ -33,3 +33,10 @@ class Category(models.Model):
         image=models.ImageField(upload_to='posts', null=True, blank=True)
         user=models.ForeignKey(BlogUser, on_delete=models.CASCADE)
 
+        def has_image(self):
+            print("my image:", self.image)
+            print("type", type(self.image))
+            return self.image is not None
+
+        def some_method(self):
+            return "hello from method"

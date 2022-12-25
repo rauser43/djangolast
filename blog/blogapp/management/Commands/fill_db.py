@@ -11,3 +11,12 @@ class Command(BaseCommand):
             print(item)
             print(type(item))
 
+Command.object.create(name= "новая", description= "Что-то"
+        category=Category.objects.get(name="новая")
+        category.name="Измененная"
+        category.save()
+
+        category delete()
+print (category.has_image())
+
+
