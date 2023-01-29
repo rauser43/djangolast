@@ -5,13 +5,30 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView,DeleteView
 from django.views.generic.base import ContextMixin
 
-from .models import Post, Tag
-from .form import ContactForm, PostForm
+from .models import Post, Tag, Category
+from .form import ContactForm, PostForm, PostCategoryForm
 from django.core.mail import send_mail
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # Create your views here.
 def main_view(request):
     posts=Post.objects.all()
+    paginator=Paginator(posts, 2)
+    # posts = Post.objects.filter(is_active=True)
+    # Posts = Post.active_objects.all()
+    # paginator = Paginator(posts, 5)
+    page=request.GET.get('page')
+    try:
+        posts=paginator.page(1)
+    exept PageNotAnInteger
+        posts = paginator.page(1)
+    exept EmptyPage
+        posts=paginator.page(paginator.num_pages)
+
+    title="главная страница"
+    # title=title.capitalize()
+    return render (request, 'blogapp/index.html', context={'posts': posts, "title": title})
+
     return render(request,"blogapp/index.html", context={'posts':posts})
 
 def contact_view (request):
@@ -69,12 +86,15 @@ def create_post(request):
             model= Tag
             template_name = "blogapp/tag_list.html"
             context_object_name ="tags"
+            paginate_by = 5
 
 
 
             def get_queryset(self):
 
-                return Tag.objects.all()
+                # return Tag.objects.all()
+                return Tag.objects.filter(is_active=True)
+                return Tag.active.objects.all()
 
         class TagDetailView (UserPassesTestMixin,DetailView, NameContextMixin):
             model = Tag
@@ -123,6 +143,38 @@ def create_post(request):
             template_name="blogapp/tag_delete.confirm.html"
             model = Tag
             success_url = reverse_lazy("blog:tag_list")
+
+
+        class CategoryDetailView(DetailView):
+            template_name="blogapp/category_detail.html"
+            model=Category
+
+            def get_context_data(self, **kwargs):
+                context=super().get_context_data(**kwargs)
+                context=PostCategoryForm()
+                return context
+
+class PostCategoryCreateView(CreateView):
+    model = Post
+    template_name ="blogapp/category_detail.html"
+    success_url = reverse_lazy("")
+    form_class = PostCategoryForm
+
+    def Post(self, request, *args, **kwargs):
+        self.category_pk=kwargs['pk']
+        return super().Post(request, *args, **kwargs)
+
+
+    def form_valid(self, form):
+        user=self.request.user
+        form.instance.user=user
+        category=get_object_or_404(Category, pk=self.category_pk)
+        form.instance.category=category
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('blog:category_detail', kwargs={'pk': self.category_pk})
+
 
 
 
