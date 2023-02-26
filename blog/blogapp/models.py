@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.functional import cached_property
 from usersapp.models import BlogUser
 
     # class Meta:
@@ -32,7 +33,7 @@ class Category(models.Model):
 
     class TimeStamp(models.Model):
         create = models.DateTimeField(auto_now_add=True)
-        update = models.DateTimeField(auto_now=True)
+        update = models.DateTimeField(auto_now=True, db_index=True)
 
     class Tag(IsActiveMixin):
         name=models.CharField(max_length=16, unique=True)
@@ -63,6 +64,11 @@ class Category(models.Model):
         user=models.ForeignKey(BlogUser, on_delete=models.CASCADE)
         rating=models.PositiveSmallIntegerField(default=1)
         is_active=models.BooleanField(default=False)
+
+        @cached_property
+        def get_all_tags(self):
+            tags=Tag.object.all()
+            return tags
 
 
         def has_image(self):

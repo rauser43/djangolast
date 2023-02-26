@@ -15,7 +15,8 @@ def main_view(request):
     posts=Post.objects.all()
     paginator=Paginator(posts, 2)
     # posts = Post.objects.filter(is_active=True)
-    # Posts = Post.active_objects.all()
+    # Posts = Post.active_objects.select_related("category", "user").all()
+    Posts = Post.active_objects.all()
     # paginator = Paginator(posts, 5)
     page=request.GET.get('page')
     try:
@@ -56,7 +57,13 @@ def contact_view (request):
 @user_passes_test(lambda u: u.is_superuser)
 def post(request,id):
     post=get_object_or_404(Post, id=id)
+    all_tags= post.get_all_tags
+    for item in all_tags:
+        print(item)
+
     post=Post.objects.get(id=id)
+    # добавить набор всех тегов
+    tags= Tag.objects.all()
     return render(request, "blogapp/post.html", context={'post': post})
 
 
